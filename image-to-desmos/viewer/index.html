@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Desmos viewer</title>
+<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+<style>html,body,#c{margin:0;height:100%;width:100%}</style>
+</head>
+<body>
+<div id="c"></div>
+<script>
+const calc = Desmos.GraphingCalculator(document.getElementById('c'));
+try {
+  const raw = location.hash.replace(/^#d=/, '');
+  if (!raw) {
+    document.body.innerHTML = '<pre>No graph in URL. Append #d=&lt;payload&gt; to load one.</pre>';
+  } else {
+    const padded = raw + '==='.slice((raw.length + 3) % 4);
+    const b64 = padded.replace(/-/g, '+').replace(/_/g, '/');
+    const json = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b64), c => c.charCodeAt(0))));
+    if (json.bounds) calc.setMathBounds(json.bounds);
+    calc.setExpressions(json.expressions);
+  }
+} catch (e) {
+  document.body.innerHTML = '<pre>Bad graph URL: ' + e.message + '</pre>';
+}
+</script>
+</body>
+</html>

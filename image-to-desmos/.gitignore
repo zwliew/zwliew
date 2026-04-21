@@ -1,0 +1,10 @@
+.env
+*.extraction.json
+__pycache__/
+*.egg-info/
+*.pyc
+.venv/
+build/
+dist/
+samples/*
+!samples/.gitkeep
